@@ -221,14 +221,6 @@ symlinks = [
     (Path(models_dir) / "controlnet", Path('/notebooks/Fooocus/models/controlnet')),
 ]
 
-for src, dest in symlinks:
-    if dest.is_symlink() and not dest.exists(): 
-        print('Symlink broken, removing:', dest)
-        dest.unlink()
-    if not dest.exists():
-        os.symlink(src, dest)
-    print(os.path.realpath(dest), '->', dest)
-
     
 #############
 #End Edits
