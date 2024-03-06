@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import json
 import math
 import numbers
@@ -167,55 +168,48 @@ def get_dir_or_set_default(key, default_value, as_array=False, make_directory=Fa
     return dp
 
 
+#############
 #Temp Edits
+#############
 
-%cd /tmp/
-!mkdir All_Models
-%cd /tmp/All_Models
-models_dir = "/tmp/All_Models"  
-!mkdir checkpoints
-!mkdir loras
-!mkdir embeddings
-!mkdir vae_approx
-!mkdir upscale_models
-!mkdir inpaint
-!mkdir controlnet
 
-%store models_dir
 
-from pathlib import Path
-import os
-models_dir = Path(models_dir)
-!rm -rf /notebooks/Fooocus/models/checkpoints
-!rm -rf /notebooks/Fooocus/models/loras
-!rm -rf /notebooks/Fooocus/models/embeddings
-!rm -rf /notebooks/Fooocus/models/vae_approx
-!rm -rf /notebooks/Fooocus/models/upscale_models
-!rm -rf /notebooks/Fooocus/models/inpaint
-!rm -rf /notebooks/Fooocus/models/clip_vision
-!rm -rf /notebooks/Fooocus/models/controlnet
-controlnet1 = Path('/notebooks/Fooocus/models')
-if controlnet1.exists():  
-    symlinks = [
-        (models_dir / "checkpoints", Path('/notebooks/Fooocus/models/checkpoints')),
-        (models_dir / "loras", Path('/notebooks/Fooocus/models/loras')),
-        (models_dir / "embeddings", Path('/notebooks/Fooocus/models/embeddings')),
-        (models_dir / "vae_approx", Path('/notebooks/Fooocus/models/vae_approx')),
-        (models_dir / "upscale_models", Path('/notebooks/Fooocus/models/upscale_models')),
-        (models_dir / "inpaint", Path('/notebooks/Fooocus/models/inpaint')),
-        (models_dir / "controlnet", Path('/notebooks/Fooocus/models/clip_vision')),
-        (models_dir / "controlnet", Path('/notebooks/Fooocus/models/controlnet')),
-               ]
-else:
-    symlinks = [
-        (models_dir / "checkpoints", Path('/notebooks/Fooocus/models/checkpoints')),
-        (models_dir / "loras", Path('/notebooks/Fooocus/models/loras')),
-        (models_dir / "embeddings", Path('/notebooks/Fooocus/models/embeddings')),
-        (models_dir / "vae_approx", Path('/notebooks/Fooocus/models/vae_approx')),
-        (models_dir / "upscale_models", Path('/notebooks/Fooocus/models/upscale_models')),
-        (models_dir / "inpaint", Path('/notebooks/Fooocus/models/inpaint')),
-        (models_dir / "controlnet", Path('/notebooks/Fooocus/models/clip_vision')),
-               ]
+# Change directory to /tmp/
+os.chdir("/tmp/")
+
+# Create directory All_Models if it doesn't exist
+models_dir = "/tmp/All_Models"
+os.makedirs(models_dir, exist_ok=True)
+
+# Change directory to /tmp/All_Models
+os.chdir(models_dir)
+
+# Create necessary subdirectories
+subdirectories = ['checkpoints', 'loras', 'embeddings', 'vae_approx', 'upscale_models', 'inpaint', 'controlnet']
+for subdir in subdirectories:
+    os.makedirs(subdir, exist_ok=True)
+
+# Store models_dir
+with open("models_dir.txt", "w") as f:
+    f.write(models_dir)
+
+# Remove existing directories in /notebooks/Fooocus/models
+existing_dirs = ['checkpoints', 'loras', 'embeddings', 'vae_approx', 'upscale_models', 'inpaint', 'clip_vision', 'controlnet']
+for subdir in existing_dirs:
+    os.system(f"rm -rf /notebooks/Fooocus/models/{subdir}")
+
+# Create symlinks
+symlinks = [
+    (Path(models_dir) / "checkpoints", Path('/notebooks/Fooocus/models/checkpoints')),
+    (Path(models_dir) / "loras", Path('/notebooks/Fooocus/models/loras')),
+    (Path(models_dir) / "embeddings", Path('/notebooks/Fooocus/models/embeddings')),
+    (Path(models_dir) / "vae_approx", Path('/notebooks/Fooocus/models/vae_approx')),
+    (Path(models_dir) / "upscale_models", Path('/notebooks/Fooocus/models/upscale_models')),
+    (Path(models_dir) / "inpaint", Path('/notebooks/Fooocus/models/inpaint')),
+    (Path(models_dir) / "clip_vision", Path('/notebooks/Fooocus/models/clip_vision')),
+    (Path(models_dir) / "controlnet", Path('/notebooks/Fooocus/models/controlnet')),
+]
+
 for src, dest in symlinks:
     if dest.is_symlink() and not dest.exists(): 
         print('Symlink broken, removing:', dest)
@@ -225,19 +219,22 @@ for src, dest in symlinks:
     print(os.path.realpath(dest), '->', dest)
 
 
-paths_checkpoints = get_dir_or_set_default('path_checkpoints', ['{models_dir}/checkpoints/'], True)
-paths_loras = get_dir_or_set_default('path_loras', ['{models_dir}/loras/'], True)
-path_embeddings = get_dir_or_set_default('path_embeddings', '{models_dir}/embeddings/')
-path_vae_approx = get_dir_or_set_default('path_vae_approx', '{models_dir}/vae_approx/')
-path_upscale_models = get_dir_or_set_default('path_upscale_models', '{models_dir}/upscale_models/')
-path_inpaint = get_dir_or_set_default('path_inpaint', '{models_dir}/inpaint/')
-path_controlnet = get_dir_or_set_default('path_controlnet', '{models_dir}/controlnet/')
-path_clip_vision = get_dir_or_set_default('path_clip_vision', '{models_dir}/clip_vision/')
+
+paths_checkpoints = get_dir_or_set_default('path_checkpoints', ['../models/checkpoints/'], True)
+paths_loras = get_dir_or_set_default('path_loras', ['../models/loras/'], True)
+path_embeddings = get_dir_or_set_default('path_embeddings', '../models/embeddings/')
+path_vae_approx = get_dir_or_set_default('path_vae_approx', '../models/vae_approx/')
+path_upscale_models = get_dir_or_set_default('path_upscale_models', '../models/upscale_models/')
+path_inpaint = get_dir_or_set_default('path_inpaint', '../models/inpaint/')
+path_controlnet = get_dir_or_set_default('path_controlnet', '../models/controlnet/')
+path_clip_vision = get_dir_or_set_default('path_clip_vision', '../models/clip_vision/')
 path_fooocus_expansion = get_dir_or_set_default('path_fooocus_expansion', '../models/prompt_expansion/fooocus_expansion')
 path_outputs = get_path_output()
 
-
+#############
 #End Edits
+#############
+
 
 def get_config_item_or_set_default(key, default_value, validator, disable_empty_as_none=False):
     global config_dict, visited_keys
