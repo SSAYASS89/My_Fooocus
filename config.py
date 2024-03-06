@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 import json
 import math
 import numbers
@@ -10,6 +9,7 @@ import modules.sdxl_styles
 from modules.model_loader import load_file_from_url
 from modules.util import get_files_from_folder, makedirs_with_log
 from modules.flags import Performance, MetadataScheme
+from pathlib import Path
 
 def get_config_path(key, default_value):
     env = os.getenv(key)
@@ -173,6 +173,17 @@ def get_dir_or_set_default(key, default_value, as_array=False, make_directory=Fa
 #############
 
 
+paths_checkpoints = get_dir_or_set_default('path_checkpoints', ['../models/checkpoints/'], True)
+paths_loras = get_dir_or_set_default('path_loras', ['../models/loras/'], True)
+path_embeddings = get_dir_or_set_default('path_embeddings', '../models/embeddings/')
+path_vae_approx = get_dir_or_set_default('path_vae_approx', '../models/vae_approx/')
+path_upscale_models = get_dir_or_set_default('path_upscale_models', '../models/upscale_models/')
+path_inpaint = get_dir_or_set_default('path_inpaint', '../models/inpaint/')
+path_controlnet = get_dir_or_set_default('path_controlnet', '../models/controlnet/')
+path_clip_vision = get_dir_or_set_default('path_clip_vision', '../models/clip_vision/')
+path_fooocus_expansion = get_dir_or_set_default('path_fooocus_expansion', '../models/prompt_expansion/fooocus_expansion')
+path_outputs = get_path_output()
+
 
 # Change directory to /tmp/
 os.chdir("/tmp/")
@@ -218,19 +229,7 @@ for src, dest in symlinks:
         os.symlink(src, dest)
     print(os.path.realpath(dest), '->', dest)
 
-
-
-paths_checkpoints = get_dir_or_set_default('path_checkpoints', ['../models/checkpoints/'], True)
-paths_loras = get_dir_or_set_default('path_loras', ['../models/loras/'], True)
-path_embeddings = get_dir_or_set_default('path_embeddings', '../models/embeddings/')
-path_vae_approx = get_dir_or_set_default('path_vae_approx', '../models/vae_approx/')
-path_upscale_models = get_dir_or_set_default('path_upscale_models', '../models/upscale_models/')
-path_inpaint = get_dir_or_set_default('path_inpaint', '../models/inpaint/')
-path_controlnet = get_dir_or_set_default('path_controlnet', '../models/controlnet/')
-path_clip_vision = get_dir_or_set_default('path_clip_vision', '../models/clip_vision/')
-path_fooocus_expansion = get_dir_or_set_default('path_fooocus_expansion', '../models/prompt_expansion/fooocus_expansion')
-path_outputs = get_path_output()
-
+    
 #############
 #End Edits
 #############
